@@ -4,8 +4,43 @@
             Claims
         </ion-title>
     </ion-toolbar>
+    <ion-toolbar color="primary">
+        <ion-title>
+            Total: {{ total | currency:'GBP' }}
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size-md="8" offset-md="2" *ngFor="let receipt of loadedReceipts">
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title>Claim value: £{{receipt.amount}}</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content no-lines class="ion-no-lines">
+                        <ion-item no-lines class="ion-no-lines">
+                            <ion-avatar slot="end">
+                                <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'" />
+                            </ion-avatar>
+                            <ion-item no-lines class="ion-no-lines">
+                                <ion-label>Date</ion-label>
+                                <p class="ion-padding">{{receipt.date | date: "dd/MM/yyyy"}}</p>
+                            </ion-item>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="ion-padding">
+        <ion-fab-button [routerLink]="['/', 'home','new-claim']">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
 
 </ion-content>
