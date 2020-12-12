@@ -1,5 +1,7 @@
 {
   "name": "claims",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
