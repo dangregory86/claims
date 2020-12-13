@@ -11,6 +11,10 @@ export class HomePage {
 	loadedReceipts: Receipt[];
 	total = 0;
 
+	// TODO create real receipt objects
+	// TODO have the objects fill the array
+	// TODO save the images and retreive images
+
 	constructor(private receiptService: ReceiptService) {}
 
 	ngOnInit(): void {
