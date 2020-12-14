@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { ItemSliding } from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IonItemSliding } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Receipt } from '../models/receipt-model';
 import { ReceiptService } from '../services/receipt-service.service';
 
@@ -8,9 +9,10 @@ import { ReceiptService } from '../services/receipt-service.service';
 	templateUrl: 'home.page.html',
 	styleUrls: [ 'home.page.scss' ]
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
 	loadedReceipts: Receipt[] = [];
 	total = 0;
+	private receiptsSub: Subscription;
 
 	// TODO create real receipt objects, with proper images
 	// TODO save the images and retreive images
@@ -20,12 +22,14 @@ export class HomePage {
 	ngOnInit(): void {
 		//Called after the constructor, initializing input properties, and the first call to ngOnChanges.
 		//Add 'implements OnInit' to the class.
+		this.receiptService.getReceipts();
+		this.receiptsSub = this.receiptService.receipts.subscribe((receipts) => {
+			this.loadedReceipts = receipts;
+			this.total = this.getTotalToClaim();
+		});
 	}
 
-	async ionViewWillEnter() {
-		this.loadedReceipts = await this.receiptService.getReceipts();
-		this.total = this.getTotalToClaim();
-	}
+	async ionViewWillEnter() {}
 
 	getTotalToClaim() {
 		let total = 0;
@@ -35,8 +39,14 @@ export class HomePage {
 		return total;
 	}
 
-	delete(receipt, slidingItem: ItemSliding) {
+	delete(receipt, slidingItem: IonItemSliding) {
 		this.receiptService.deleteSavedReceipt(receipt.id);
 		slidingItem.close();
+	}
+
+	ngOnDestroy() {
+		if (this.receiptsSub) {
+			this.receiptsSub.unsubscribe();
+		}
 	}
 }

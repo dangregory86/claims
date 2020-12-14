@@ -19,11 +19,10 @@
                 <ion-list>
                     <ion-item-sliding *ngFor="let receipt of loadedReceipts" #slidingItem>
                         <ion-item [routerLink]="[ '/home/receipt-detail', receipt.id ]" class="ion-no-padding">
-                            <ion-label>Claim value: {{ receipt.amount | currency:'GBP' }}</ion-label>
+                            <ion-label>{{ receipt.amount | currency:'GBP' }} </ion-label>
                             <ion-avatar slot="start">
                                 <img [src]="receipt.imgSrc" />
                             </ion-avatar>
-                            <ion-label>Date</ion-label>
                             <p class="ion-padding">{{receipt.date | date: "dd/MM/yyyy"}}</p>
                         </ion-item>
                         <ion-item-options side="start">
