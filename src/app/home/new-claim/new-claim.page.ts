@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { ImageService } from 'src/app/services/image-service.service';
+import { NavController } from '@ionic/angular';
+import { Receipt } from '../../models/receipt-model';
+import { ImageService } from '../../services/image-service.service';
+import { ReceiptService } from '../../services/receipt-service.service';
 
 function base64toBlob(base64Data, contentType) {
 	contentType = contentType || '';
@@ -32,7 +35,11 @@ export class NewClaimPage implements OnInit {
 	newReceiptForm: FormGroup;
 	defaultDate: Date = new Date();
 
-	constructor(private imageService: ImageService) {}
+	constructor(
+		private imageService: ImageService,
+		private navCtrl: NavController,
+		private receiptService: ReceiptService
+	) {}
 
 	ngOnInit() {
 		this.newReceiptForm = new FormGroup({
@@ -52,6 +59,15 @@ export class NewClaimPage implements OnInit {
 		if (!this.newReceiptForm.valid || !this.newReceiptForm.get('image').value) {
 			return;
 		}
+		const newReceipt = new Receipt(
+			'r' + Math.random().toString(),
+			this.newReceiptForm.value.amount,
+			new Date(this.newReceiptForm.value.date),
+			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
+		);
+		console.log(newReceipt);
+		this.receiptService.addNewReceipt(newReceipt);
+		this.navCtrl.navigateBack('/home');
 		console.log(this.newReceiptForm.value);
 	}
 

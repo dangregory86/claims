@@ -53,4 +53,8 @@ export class ReceiptService {
 	public getCurrentReceipt(receiptId: string) {
 		return { ...this._receipts.find((r) => r.id === receiptId) };
 	}
+
+	public addNewReceipt(receipt: Receipt) {
+		this._receipts.unshift(receipt);
+	}
 }
