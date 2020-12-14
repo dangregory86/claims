@@ -34,6 +34,7 @@ function base64toBlob(base64Data, contentType) {
 export class NewClaimPage implements OnInit {
 	newReceiptForm: FormGroup;
 	defaultDate: Date = new Date();
+	imageType: string;
 
 	constructor(
 		private imageService: ImageService,
@@ -55,20 +56,20 @@ export class NewClaimPage implements OnInit {
 		});
 	}
 
-	onCreateReceipt() {
+	async onCreateReceipt() {
 		if (!this.newReceiptForm.valid || !this.newReceiptForm.get('image').value) {
 			return;
 		}
+		const imgUri = await this.imageService.saveImage(this.imageType, this.newReceiptForm.value.image);
+		console.log(imgUri);
 		const newReceipt = new Receipt(
 			'r' + Math.random().toString(),
 			this.newReceiptForm.value.amount,
 			new Date(this.newReceiptForm.value.date),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
+			imgUri
 		);
-		console.log(newReceipt);
 		this.receiptService.addNewReceipt(newReceipt);
 		this.navCtrl.navigateBack('/home');
-		console.log(this.newReceiptForm.value);
 	}
 
 	getToday() {
@@ -88,13 +89,14 @@ export class NewClaimPage implements OnInit {
 
 	onImagePicked(imageData: string | File, imageType: string) {
 		let imageFile;
-		let imageStore;
 		if (typeof imageData === 'string') {
 			try {
 				imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
+				this.imageType = '.jpeg';
 			} catch (error) {
 				try {
 					imageFile = base64toBlob(imageData.replace('data:image/png;base64,', ''), 'image/png');
+					this.imageType = '.png';
 				} catch (error) {
 					console.log(error);
 				}
@@ -102,7 +104,6 @@ export class NewClaimPage implements OnInit {
 		} else {
 			imageFile = imageData;
 		}
-		console.log(imageStore);
 		this.newReceiptForm.patchValue({ image: imageFile });
 	}
 }

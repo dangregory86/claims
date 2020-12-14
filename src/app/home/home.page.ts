@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IonItemSliding } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Receipt } from '../models/receipt-model';
+import { ImageService } from '../services/image-service.service';
 import { ReceiptService } from '../services/receipt-service.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class HomePage implements OnInit, OnDestroy {
 	// TODO create real receipt objects, with proper images
 	// TODO save the images and retreive images
 
-	constructor(private receiptService: ReceiptService) {}
+	constructor(private receiptService: ReceiptService, private imageService: ImageService) {}
 
 	ngOnInit(): void {
 		//Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -27,6 +28,7 @@ export class HomePage implements OnInit, OnDestroy {
 			this.loadedReceipts = receipts;
 			this.total = this.getTotalToClaim();
 		});
+		console.log(this.loadedReceipts);
 	}
 
 	async ionViewWillEnter() {}

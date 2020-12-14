@@ -16,7 +16,14 @@ export class ReceiptService {
 	constructor() {}
 
 	public async getReceipts() {
-		this._receipts.next(await this.getSavedReceipts());
+		const savedReceipts = await this.getSavedReceipts();
+		this.receipts.pipe(take(1)).subscribe((receipts) => {
+			if (savedReceipts === null) {
+				this._receipts.next([]);
+			} else {
+				this._receipts.next(savedReceipts);
+			}
+		});
 	}
 
 	get receipts() {
@@ -31,9 +38,12 @@ export class ReceiptService {
 			})
 		);
 	}
-
+	// TODO fix null pointer for receipts when empty.
 	public async addNewReceipt(newReceipt: Receipt) {
 		this.receipts.pipe(take(1)).subscribe((receipts) => {
+			if (receipts === null) {
+				receipts = [];
+			}
 			this._receipts.next(receipts.concat(newReceipt));
 		});
 		await this.saveReceipts();
@@ -45,7 +55,6 @@ export class ReceiptService {
 				key: this.STORAGE_KEY,
 				value: JSON.stringify(receipts)
 			});
-			console.log('receipt saved!');
 		});
 	}
 
