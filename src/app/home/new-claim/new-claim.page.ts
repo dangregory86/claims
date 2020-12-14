@@ -92,18 +92,15 @@ export class NewClaimPage implements OnInit {
 		if (typeof imageData === 'string') {
 			try {
 				imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
-				imageStore = this.imageService.saveImage('.jpeg', imageFile);
 			} catch (error) {
 				try {
 					imageFile = base64toBlob(imageData.replace('data:image/png;base64,', ''), 'image/png');
-					imageStore = this.imageService.saveImage('.png', imageFile);
 				} catch (error) {
 					console.log(error);
 				}
 			}
 		} else {
 			imageFile = imageData;
-			imageStore = this.imageService.saveImage('.jpeg', imageFile);
 		}
 		console.log(imageStore);
 		this.newReceiptForm.patchValue({ image: imageFile });

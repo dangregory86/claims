@@ -16,22 +16,23 @@
     <ion-grid>
         <ion-row>
             <ion-col size-md="8" offset-md="2">
-                <ion-card *ngFor="let receipt of loadedReceipts" [routerLink]="[ '/home/receipt-detail', receipt.id ]">
-                    <ion-card-header>
-                        <ion-card-title>Claim value: {{ receipt.amount | currency:'GBP' }}</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content no-lines class="ion-no-lines">
-                        <ion-item no-lines class="ion-no-lines">
-                            <ion-avatar slot="end">
-                                <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'" />
+                <ion-list>
+                    <ion-item-sliding *ngFor="let receipt of loadedReceipts" #slidingItem>
+                        <ion-item [routerLink]="[ '/home/receipt-detail', receipt.id ]" class="ion-no-padding">
+                            <ion-label>Claim value: {{ receipt.amount | currency:'GBP' }}</ion-label>
+                            <ion-avatar slot="start">
+                                <img [src]="receipt.imgSrc" />
                             </ion-avatar>
-                            <ion-item no-lines class="ion-no-lines">
-                                <ion-label>Date</ion-label>
-                                <p class="ion-padding">{{receipt.date | date: "dd/MM/yyyy"}}</p>
-                            </ion-item>
+                            <ion-label>Date</ion-label>
+                            <p class="ion-padding">{{receipt.date | date: "dd/MM/yyyy"}}</p>
                         </ion-item>
-                    </ion-card-content>
-                </ion-card>
+                        <ion-item-options side="start">
+                            <ion-item-option color="danger" (click)="delete(receipt, slidingItem)">
+                                <ion-icon slot="icon-only" name="trash"></ion-icon>
+                            </ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+                </ion-list>
             </ion-col>
         </ion-row>
     </ion-grid>

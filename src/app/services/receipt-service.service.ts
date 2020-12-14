@@ -1,52 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Receipt } from '../models/receipt-model';
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ReceiptService {
-	private _receipts: Receipt[] = [
-		new Receipt(
-			'r1',
-			20.99,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		),
-		new Receipt(
-			'r2',
-			5,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		),
-		new Receipt(
-			'r3',
-			233.99,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		),
-		new Receipt(
-			'r4',
-			17.99,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		),
-		new Receipt(
-			'r5',
-			17.99,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		),
-		new Receipt(
-			'r6',
-			17.99,
-			new Date(),
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/200px-ReceiptSwiss.jpg'
-		)
-	];
+	private STORAGE_KEY: string = 'receipts-string';
+	private _receipts: Receipt[];
 
 	constructor() {}
 
-	public getReceipts() {
+	public async getReceipts() {
+		if (this._receipts === undefined) {
+			this._receipts = await this.getSavedReceipts();
+		}
 		return [ ...this._receipts ];
 	}
 
@@ -54,7 +24,27 @@ export class ReceiptService {
 		return { ...this._receipts.find((r) => r.id === receiptId) };
 	}
 
-	public addNewReceipt(receipt: Receipt) {
+	public async addNewReceipt(receipt: Receipt) {
 		this._receipts.unshift(receipt);
+		await this.saveReceipts();
+	}
+
+	private async saveReceipts() {
+		await Storage.set({
+			key: this.STORAGE_KEY,
+			value: JSON.stringify(this._receipts)
+		});
+		console.log('receipt saved!');
+	}
+
+	private async getSavedReceipts() {
+		const retreivedReceipts = await Storage.get({ key: this.STORAGE_KEY });
+		return JSON.parse(retreivedReceipts.value);
+	}
+
+	public deleteSavedReceipt(receiptId: string) {
+		const newReceipts = this._receipts.filter((r) => r.id !== receiptId);
+		this._receipts = newReceipts;
+		this.saveReceipts();
 	}
 }

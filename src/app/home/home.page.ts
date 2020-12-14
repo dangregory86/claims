@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ItemSliding } from '@ionic/angular';
 import { Receipt } from '../models/receipt-model';
 import { ReceiptService } from '../services/receipt-service.service';
 
@@ -8,11 +9,10 @@ import { ReceiptService } from '../services/receipt-service.service';
 	styleUrls: [ 'home.page.scss' ]
 })
 export class HomePage {
-	loadedReceipts: Receipt[];
+	loadedReceipts: Receipt[] = [];
 	total = 0;
 
-	// TODO create real receipt objects
-	// TODO have the objects fill the array
+	// TODO create real receipt objects, with proper images
 	// TODO save the images and retreive images
 
 	constructor(private receiptService: ReceiptService) {}
@@ -22,8 +22,8 @@ export class HomePage {
 		//Add 'implements OnInit' to the class.
 	}
 
-	ionViewWillEnter() {
-		this.loadedReceipts = this.receiptService.getReceipts();
+	async ionViewWillEnter() {
+		this.loadedReceipts = await this.receiptService.getReceipts();
 		this.total = this.getTotalToClaim();
 	}
 
@@ -33,5 +33,10 @@ export class HomePage {
 			total = total + r.amount;
 		}
 		return total;
+	}
+
+	delete(receipt, slidingItem: ItemSliding) {
+		this.receiptService.deleteSavedReceipt(receipt.id);
+		slidingItem.close();
 	}
 }

@@ -17,11 +17,6 @@ export class ImagePickerComponent implements OnInit {
 	constructor(private platform: Platform) {}
 
 	ngOnInit() {
-		console.log('mobile', this.platform.is('mobile'));
-		console.log('iphone', this.platform.is('ios'));
-		console.log('android', this.platform.is('android'));
-		console.log('hybrid', this.platform.is('hybrid'));
-		console.log('desktop', this.platform.is('desktop'));
 		if ((this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop')) {
 			this.usePicker = true;
 		}

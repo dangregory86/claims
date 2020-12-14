@@ -21,6 +21,7 @@ export class ImageService {
 			directory: FilesystemDirectory.Data
 		});
 		console.log(fileName);
+		console.log(savedFile);
 		return {
 			filepath: fileName
 		};
