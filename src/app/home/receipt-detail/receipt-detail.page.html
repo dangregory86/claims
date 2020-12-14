@@ -1,9 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>receipt-detail</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>{{ receipt.date | date }}</ion-title>
+    </ion-toolbar>
 </ion-header>
-
+<!-- TODO make it pretty. -->
 <ion-content>
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col size-md="8" offset-md="2">
+                <ion-img [src]="receipt.imgSrc"></ion-img>
+                <ion-text class="ion-align-items-center">
+                    <h1>Total receipt amount: {{ receipt.amount | currency:'GBP' }}</h1>
+                </ion-text>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
 
 </ion-content>
