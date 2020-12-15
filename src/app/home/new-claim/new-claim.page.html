@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
         <ion-buttons slot="start">
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
@@ -23,7 +23,7 @@
                     </ion-item>
                     <ion-item>
                         <ion-label>Date of expense:</ion-label>
-                        <ion-datetime required display-format="DD.MM.YYYY" [value]="defaultDate" formControlName="date" min="2019-01-01" max="2020-12-13">
+                        <ion-datetime required display-format="DD.MM.YYYY" [value]="defaultDate" formControlName="date" min="2019-01-01" [max]="maxDate">
                         </ion-datetime>
                     </ion-item>
                     <app-image-picker (imagePick)="onImagePicked($event)" class="ion-margin"></app-image-picker>

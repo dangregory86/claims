@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
         <ion-buttons slot="start">
             <ion-back-button defaultHref="home"></ion-back-button>
         </ion-buttons>
@@ -11,7 +11,7 @@
     <ion-grid fixed>
         <ion-row>
             <ion-col size-md="8" offset-md="2">
-                <ion-img [src]="receipt.imgSrc"></ion-img>
+                <ion-img [src]="receiptImage"></ion-img>
                 <ion-text class="ion-align-items-center">
                     <h1>Total receipt amount: {{ receipt.amount | currency:'GBP' }}</h1>
                 </ion-text>

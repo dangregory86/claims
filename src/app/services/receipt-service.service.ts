@@ -3,6 +3,7 @@ import { Receipt } from '../models/receipt-model';
 import { Plugins } from '@capacitor/core';
 import { BehaviorSubject } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { ImageService } from './image-service.service';
 
 const { Storage } = Plugins;
 
@@ -13,14 +14,17 @@ export class ReceiptService {
 	private STORAGE_KEY: string = 'receipts-string';
 	private _receipts = new BehaviorSubject<Receipt[]>([]);
 
-	constructor() {}
+	constructor(private imageService: ImageService) {}
 
 	public async getReceipts() {
 		const savedReceipts = await this.getSavedReceipts();
-		this.receipts.pipe(take(1)).subscribe((receipts) => {
+		this.receipts.pipe(take(1)).subscribe(async (receipts) => {
 			if (savedReceipts === null) {
 				this._receipts.next([]);
 			} else {
+				for (let r of receipts) {
+					r.imgSrc = await this.imageService.loadSaved(r.imgSrc);
+				}
 				this._receipts.next(savedReceipts);
 			}
 		});

@@ -4,11 +4,6 @@
             Claims
         </ion-title>
     </ion-toolbar>
-    <ion-toolbar color="primary">
-        <ion-title>
-            Total: {{ total | currency:'GBP' }}
-        </ion-title>
-    </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -16,12 +11,27 @@
     <ion-grid>
         <ion-row>
             <ion-col size-md="8" offset-md="2">
-                <ion-list>
+                <ion-item lines='none' *ngIf="loadedReceipts.length <= 0">
+                    <ion-label class='ion-text-wrap'>
+                        <ion-text>
+                            <h3>Nothing to claim!</h3>
+                        </ion-text>
+                        <ion-text>
+                            <p>Click the plus button below to add an item.</p>
+                        </ion-text>
+                    </ion-label>
+                </ion-item>
+                <ion-list lines="full" *ngIf="loadedReceipts.length > 0">
+                    <ion-list-header class="to-claim" lines="full">
+                        <ion-label>Still to claim: {{ total | currency:'GBP' }}</ion-label>
+                    </ion-list-header>
                     <ion-item-sliding *ngFor="let receipt of loadedReceipts" #slidingItem>
-                        <ion-item [routerLink]="[ '/home/receipt-detail', receipt.id ]" class="ion-no-padding">
+                        <ion-item-divider>
+                        </ion-item-divider>
+                        <ion-item [routerLink]="[ '/home/receipt-detail', receipt.id ]">
                             <ion-label>{{ receipt.amount | currency:'GBP' }} </ion-label>
                             <ion-avatar slot="start">
-                                <img [src]="receipt.imgSrc" />
+                                <img [src]="receipt.imgSrc.webviewPath" />
                             </ion-avatar>
                             <p class="ion-padding">{{receipt.date | date: "dd/MM/yyyy"}}</p>
                         </ion-item>

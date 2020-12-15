@@ -15,23 +15,18 @@ export class HomePage implements OnInit, OnDestroy {
 	total = 0;
 	private receiptsSub: Subscription;
 
-	// TODO create real receipt objects, with proper images
-	// TODO save the images and retreive images
-
 	constructor(private receiptService: ReceiptService, private imageService: ImageService) {}
 
-	ngOnInit(): void {
-		//Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-		//Add 'implements OnInit' to the class.
+	ngOnInit() {
 		this.receiptService.getReceipts();
-		this.receiptsSub = this.receiptService.receipts.subscribe((receipts) => {
+		this.receiptsSub = this.receiptService.receipts.subscribe(async (receipts) => {
+			for (let r of receipts) {
+				r.imgSrc.webviewPath = (await this.imageService.loadSaved(r.imgSrc)).webviewPath;
+			}
 			this.loadedReceipts = receipts;
 			this.total = this.getTotalToClaim();
 		});
-		console.log(this.loadedReceipts);
 	}
-
-	async ionViewWillEnter() {}
 
 	getTotalToClaim() {
 		let total = 0;

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Receipt } from 'src/app/models/receipt-model';
+import { Receipt } from '../../models/receipt-model';
 import { ImageService } from '../../services/image-service.service';
 import { ReceiptService } from '../../services/receipt-service.service';
 
@@ -14,7 +14,7 @@ import { ReceiptService } from '../../services/receipt-service.service';
 export class ReceiptDetailPage implements OnInit, OnDestroy {
 	receipt: Receipt;
 	private receiptSub: Subscription;
-	receiptImage;
+	receiptImage: string;
 
 	constructor(
 		private receiptService: ReceiptService,
@@ -30,11 +30,9 @@ export class ReceiptDetailPage implements OnInit, OnDestroy {
 				return;
 			}
 			const placeId = paramMap.get('receiptId');
-			console.log(placeId);
-			this.receiptSub = this.receiptService.getCurrentReceipt(placeId).subscribe((receipt) => {
+			this.receiptSub = this.receiptService.getCurrentReceipt(placeId).subscribe(async (receipt) => {
 				this.receipt = receipt;
-				console.log(receipt.imgSrc);
-				this.receiptImage = this.imageService.getImageUrl(receipt.imgSrc);
+				this.receiptImage = (await this.imageService.loadSaved(receipt.imgSrc)).webviewPath;
 			});
 		});
 	}
